@@ -5,15 +5,15 @@ package com.bruce.chatui;
  */
 public class Emoji {
 
-	public final static int EMOJI_GAME = 1;
+	public final static int EMOJI_GAME = 1; //emoji类型
 	public final static int EMOJI_SMILEY = 2;
 	public final static int EMOJI_VIP = 3;
 	
-	public int resourceid;
+	public int resourceid; //id
 	public String value;
 	public String tag;
 	public boolean hide;
-	public int sort;
+	public int sort; //加入的位置
 	public int type;
 	
 	public static Emoji fromResource(int icon,String value,boolean hide,int sort,String tag,int type) {

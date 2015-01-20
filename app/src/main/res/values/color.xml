@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 基础颜色 -->
+    <color name="white">#ffffff</color>
+    <color name="red">#ff0000</color>
+    <color name="transparent">#000000</color>
+    <!-- 开源组件颜色 -->
+    <color name="default_circle_indicator_page_color">#d8d8d8</color>
+    <color name="default_circle_indicator_fill_color">#757b7f</color>
+    <integer name="default_circle_indicator_orientation">0</integer>
+    <color name="default_circle_indicator_stroke_color">#FFDDDDDD</color>
+    <dimen name="default_circle_indicator_stroke_width">1dp</dimen>
+    <dimen name="default_circle_indicator_radius">3dp</dimen>
+    <bool name="default_circle_indicator_centered">true</bool>
+    <bool name="default_circle_indicator_snap">false</bool>
+    <color name="holo_blue">#FF33E5B5</color>
+    <color name="color_6633B5E5">#6633B5E5</color>
+    <drawable name="color_play_record_menu">#282e35</drawable>
+    <color name="color_1E2021">#1E2021</color>
+	<color name="color_323538">#323538</color>
+</resources>
+
