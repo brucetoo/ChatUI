@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:orientation="vertical"
+    android:layout_height="fill_parent">
+
+    <TextView
+        android:id="@+id/text_top"
+        android:layout_width="fill_parent"
+        android:layout_height="44dip"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:text="ChatUI"
+        android:background="#51c114"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:ellipsize="end" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_below="@+id/text_top"
+        android:id="@+id/layout_swipe"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/list_view"
+            android:dividerHeight="15dp"
+            android:fadeScrollbars="true"
+            android:divider="@null"
+            android:fadingEdge="none"
+            android:listSelector="#00000000"
+            android:overScrollMode="never"
+            android:scrollbarStyle="outsideOverlay"
+            android:transcriptMode="normal"
+            android:cacheColorHint="#00000000" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dip"
+            android:background="#d6dee2" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:id="@+id/layout_bottom"
+            android:paddingBottom="8dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="8dp"
+            android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/chat_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dip"
+            android:background="@drawable/selector_btn_chat_record" />
+
+        <com.bruce.chatui.ClipEditText
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:id="@+id/edit_text"
+            android:background="@drawable/bg_group_chat_input"
+            android:maxLines="4"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chat_smile"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dip"
+            android:background="@drawable/selector_btn_smiley" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chat_item"
+            android:layout_marginLeft="10dip"
+            android:src="@drawable/selector_btn_chat_item" />
+    </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
