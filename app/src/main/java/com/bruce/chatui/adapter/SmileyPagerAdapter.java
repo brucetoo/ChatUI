@@ -1,4 +1,4 @@
-package com.bruce.chatui;
+package com.bruce.chatui.adapter;
 
 import android.app.Activity;
 import android.support.v4.app.FragmentManager;
@@ -6,8 +6,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.view.ViewGroup;
 
+import com.bruce.chatui.Emoji;
+import com.bruce.chatui.SmileyItemFragment;
 import com.bruce.chatui.application.AppConstant;
-
+import com.bruce.chatui.SmileyItemFragment.OnDeleteSmileyListener;
+import com.bruce.chatui.SmileyItemFragment.OnSelectSmileyListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +22,16 @@ public class SmileyPagerAdapter extends FragmentStatePagerAdapter {
 
 
     private Activity mActivity;
+    private OnDeleteSmileyListener mDeleteListener;
+    private OnSelectSmileyListener mSelectListener;
 
+    public void setmDeleteListener(OnDeleteSmileyListener mDeleteListener) {
+        this.mDeleteListener = mDeleteListener;
+    }
+
+    public void setmSelectListener(OnSelectSmileyListener mSelectListener) {
+        this.mSelectListener = mSelectListener;
+    }
     public SmileyPagerAdapter(FragmentManager fm,Activity mActivity) {
         super(fm);
         this.mActivity = mActivity;
@@ -62,6 +74,8 @@ public class SmileyPagerAdapter extends FragmentStatePagerAdapter {
             }
             fragment = new SmileyItemFragment(emojis);
         }
+        fragment.setmDeleteListener(mDeleteListener);
+        fragment.setmSelectListener(mSelectListener);
         return fragment;
     }
 

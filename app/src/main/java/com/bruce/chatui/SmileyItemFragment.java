@@ -3,10 +3,12 @@ package com.bruce.chatui;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bruce.chatui.adapter.SmileyItemPageAdapter;
 import com.bruce.chatui.thirdView.CirclePageIndicator;
 
 import java.util.List;
@@ -18,12 +20,26 @@ import java.util.List;
  */
 public class SmileyItemFragment extends Fragment {
 
-    private static int SMILEYPAGE_SIZE = 21; //表情每页的个数
+    public static int SMILEYPAGE_SIZE = 21; //表情每页的个数
     private ViewPager mViewPager;
     private CirclePageIndicator mIndicator;
     private List<Emoji> emojies; //该fragment中emoji的集合
+    private SmileyItemPageAdapter mAdapter;
 
+    /**
+     * 每个emoji表情的点击事件回调都会传递很多层到达最初的处理界面
+     */
+    private OnSelectSmileyListener mSelectListener;
+    private OnDeleteSmileyListener mDeleteListener;
     public SmileyItemFragment(){}
+
+    public void setmSelectListener(OnSelectSmileyListener mSelectListener) {
+        this.mSelectListener = mSelectListener;
+    }
+
+    public void setmDeleteListener(OnDeleteSmileyListener mDeleteListener) {
+        this.mDeleteListener = mDeleteListener;
+    }
 
     public SmileyItemFragment(List<Emoji> _emojies) {
         this.emojies = _emojies;
@@ -36,14 +52,42 @@ public class SmileyItemFragment extends Fragment {
         mViewPager = (ViewPager) view.findViewById(R.id.item_viewpager);
         mIndicator = (CirclePageIndicator) view.findViewById(R.id.page_indicator);
 
-        //根据emoji的数量算出viewpager的页数
+        //根据emoji的数量算出viewpager的页数 pageNum
         int smileySize = emojies.size();
         int pageNum = smileySize % SMILEYPAGE_SIZE == 0 ?
                 smileySize/SMILEYPAGE_SIZE
                 :smileySize/SMILEYPAGE_SIZE + 1;
 
-
+        mAdapter = new SmileyItemPageAdapter(getActivity().getSupportFragmentManager(),emojies,pageNum);
+        mAdapter.setmDeleteListener(mDeleteListener);
+        mAdapter.setmSelectListener(mSelectListener);
+        mViewPager.setAdapter(mAdapter);
+        mIndicator.setViewPager(mViewPager);
         return view;
+    }
+
+
+    public void setItemFirst(){
+        mViewPager.setCurrentItem(0,false);
+    }
+
+    public void setItemLast(){
+        mViewPager.setCurrentItem(mAdapter.getCount()-1,false);
+    }
+
+
+    /**
+     * 选中单个emoji表情的接口
+     */
+    public interface  OnSelectSmileyListener{
+        void onSelected(SpannableString spannableString);
+    }
+
+    /**
+     * 删除某个emoji表情的接口
+     */
+    public interface  OnDeleteSmileyListener{
+        void onDelete();
     }
 
 }
