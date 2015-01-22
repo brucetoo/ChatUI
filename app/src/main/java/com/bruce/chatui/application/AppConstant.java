@@ -81,7 +81,7 @@ public class AppConstant extends Application {
         return defaultEmoji;
     }
 
-    public static AppConstant getApplition(Context context){
+    public static AppConstant getApplition(Context context) {
         return (AppConstant) context.getApplicationContext();
     }
 

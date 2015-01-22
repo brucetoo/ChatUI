@@ -1,11 +1,20 @@
 package com.bruce.chatui;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,32 +24,20 @@ import android.widget.TextView;
 import com.bruce.chatui.adapter.PhraseAdapter;
 import com.bruce.chatui.adapter.SmileyPagerAdapter;
 
-import roboguice.activity.RoboFragmentActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
-
 /**
  * Created by N1007 on 2015/1/20.
  */
-@ContentView(R.layout.main_activity)
-public class MainActivity extends RoboFragmentActivity {
+public class MainActivity extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
     /**
      * 主聊天面板
      */
-    @InjectView(R.id.layout_swipe)
-    SwipeRefreshLayout mSwipeLayout;
-    @InjectView(R.id.list_view)
-    ListView mListView;
-    @InjectView(R.id.chat_record)
-    ImageView mChat;
-    @InjectView(R.id.chat_smile)
-    ImageView mSmile;
-    @InjectView(R.id.chat_item)
-    ImageView mItem;
-    @InjectView(R.id.edit_text)
-    ClipEditText mEditText;
-    @InjectView(R.id.layout_bottom)
-    LinearLayout mBottomLayout;
+    private SwipeRefreshLayout mSwipeLayout;
+    private ListView mListView;
+    private ImageView mRecord;
+    private ImageView mSmile;
+    private ImageView mSend;
+    private ClipEditText mEditText;
+    private LinearLayout mBottomLayout;
 
     /**
      * 表情面板
@@ -52,30 +49,146 @@ public class MainActivity extends RoboFragmentActivity {
     private TextView mDefalutSmiley;
     private TextView mGameSmiley;
     private TextView mPharseSmiley;
+    private boolean isSend;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.main_activity);
+        initView();
         initSmileyPanel();
         initCameraPanel();
-
-
         initMainPanel();
     }
+
+    private void initView() {
+        mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.layout_swipe);
+        mListView = (ListView) findViewById(R.id.list_view);
+        mRecord = (ImageView) findViewById(R.id.chat_record);
+        mSmile = (ImageView) findViewById(R.id.chat_smile);
+        mSend = (ImageView) findViewById(R.id.chat_item);
+        mEditText = (ClipEditText) findViewById(R.id.edit_text);
+        mBottomLayout = (LinearLayout) findViewById(R.id.layout_bottom);
+    }
+
 
     /**
      * 主界面的操作设置
      */
     private void initMainPanel() {
-
+        mListView.setOnTouchListener(mListTouchListener);
+        mSmile.setOnClickListener(mSmileClickListener);
+        mRecord.setOnClickListener(mRecordClickListener);
+        mSend.setOnClickListener(mSendClickListener);
+        mEditText.setOnClickListener(mEditClickListener);
+        mEditText.addTextChangedListener(mWatcher);
+        mEditText.setOnFocusChangeListener(mFocusChangeListener);
+        mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorSchemeResources(R.color.material_700,R.color.material_500);
     }
+
+    private View.OnFocusChangeListener mFocusChangeListener = new View.OnFocusChangeListener() {
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                removeBottomView();
+            }
+        }
+    };
+    /**
+     * 输入框的输入监听事件
+     */
+    private TextWatcher mWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            Log.d("---------------------", "afterTextChanged" + s.toString());
+            if (!TextUtils.isEmpty(s.toString())) {
+                isSend = true;
+                mSend.setBackgroundResource(R.drawable.selector_btn_send);
+            } else {
+                isSend = false;
+                mSend.setBackgroundResource(R.drawable.selector_btn_chat_item);
+            }
+        }
+    };
+
+
+    /**
+     * 聊天界面的触摸处理
+     */
+    private View.OnTouchListener mListTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            //软键盘消失
+            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+            removeBottomView();
+            return false;
+        }
+    };
+
+
+    /**
+     * 表情按钮点击
+     */
+    private View.OnClickListener mSmileClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            changePanel(mSmiley);
+        }
+    };
+
+
+    /**
+     * 录音点击按钮
+     */
+    private View.OnClickListener mRecordClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
+    /**
+     * 发送点击按钮（分为发送和更多按钮需要判断）
+     */
+    private View.OnClickListener mSendClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (isSend) { //发送逻辑处理
+
+            } else { //更多逻辑处理
+                changePanel(mCamera);
+            }
+        }
+    };
+    /**
+     * 输入框点击
+     */
+    private View.OnClickListener mEditClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            removeBottomView();
+        }
+    };
 
     /**
      * 相机面板
      */
     private void initCameraPanel() {
-        mCamera = View.inflate(this,R.layout.view_camera,null);
+        mCamera = View.inflate(this, R.layout.view_camera, null);
         ImageView btnPhoto = (ImageView) mCamera.findViewById(R.id.btn_phone);
         ImageView btnCamera = (ImageView) mCamera.findViewById(R.id.btn_camera);
 
@@ -105,19 +218,19 @@ public class MainActivity extends RoboFragmentActivity {
         mGameSmiley = (TextView) mSmiley.findViewById(R.id.smiley_game);
         mPharseSmiley = (TextView) mSmiley.findViewById(R.id.smiley_phrase);
 
-        SmileyPagerAdapter adapter = new SmileyPagerAdapter(getSupportFragmentManager(),this);
+        SmileyPagerAdapter adapter = new SmileyPagerAdapter(getSupportFragmentManager(), this);
         adapter.setmSelectListener(new SmileyItemFragment.OnSelectSmileyListener() {
             @Override
             public void onSelected(SpannableString spannableString) {
                 //在edittext框中添加选中的表情
-                mEditText.getText().insert(mEditText.getSelectionStart(),spannableString);
+                mEditText.getText().insert(mEditText.getSelectionStart(), spannableString);
             }
         });
         adapter.setmDeleteListener(new SmileyItemFragment.OnDeleteSmileyListener() {
             @Override
             public void onDelete() {
                 //调用系统的删除键
-                mEditText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_MULTIPLE,KeyEvent.KEYCODE_DEL));
+                mEditText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_MULTIPLE, KeyEvent.KEYCODE_DEL));
             }
         });
         mViewPager.setAdapter(adapter);
@@ -128,16 +241,16 @@ public class MainActivity extends RoboFragmentActivity {
                  * 如果现在是第一页，保持第二页中数据的在其数据的第一页
                  * 如果是第二页，保持第一页数据最后一页
                  */
-                if(position == 0){
-                    ((SmileyPagerAdapter)mViewPager.getAdapter()).instantiateItem(mViewPager,1).setItemFirst();
-                }else if(position == 1){
-                    ((SmileyPagerAdapter)mViewPager.getAdapter()).instantiateItem(mViewPager,0).setItemLast();
+                if (position == 0) {
+                    ((SmileyPagerAdapter) mViewPager.getAdapter()).instantiateItem(mViewPager, 1).setItemFirst();
+                } else if (position == 1) {
+                    ((SmileyPagerAdapter) mViewPager.getAdapter()).instantiateItem(mViewPager, 0).setItemLast();
                 }
 
                 mDefalutSmiley.setSelected(false);
                 mGameSmiley.setSelected(false);
                 mPharseSmiley.setSelected(false);
-                switch (position){
+                switch (position) {
                     case 0:
                         mDefalutSmiley.setSelected(true);
                         break;
@@ -163,7 +276,7 @@ public class MainActivity extends RoboFragmentActivity {
         mSmileyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mEditText.getText().insert(mEditText.getSelectionStart(),phraseAdapter.phrases[position]);
+                mEditText.getText().insert(mEditText.getSelectionStart(), phraseAdapter.phrases[position]);
             }
         });
 
@@ -178,7 +291,7 @@ public class MainActivity extends RoboFragmentActivity {
                 mViewPager.setVisibility(View.VISIBLE);
                 //第一个pager中第一个fragment选中
                 mViewPager.setCurrentItem(0);
-                ((SmileyPagerAdapter)mViewPager.getAdapter()).instantiateItem(mViewPager,0).setItemFirst();
+                ((SmileyPagerAdapter) mViewPager.getAdapter()).instantiateItem(mViewPager, 0).setItemFirst();
             }
         });
         //游戏表情面板
@@ -190,7 +303,7 @@ public class MainActivity extends RoboFragmentActivity {
                 mViewPager.setVisibility(View.VISIBLE);
                 //第二个pager中第一个fragment选中
                 mViewPager.setCurrentItem(1);
-                ((SmileyPagerAdapter)mViewPager.getAdapter()).instantiateItem(mViewPager,1).setItemFirst();
+                ((SmileyPagerAdapter) mViewPager.getAdapter()).instantiateItem(mViewPager, 1).setItemFirst();
             }
         });
 
@@ -205,6 +318,50 @@ public class MainActivity extends RoboFragmentActivity {
                 mViewPager.setVisibility(View.GONE);
             }
         });
+    }
+
+    /**
+     * 移除底部的view
+     */
+    private void removeBottomView() {
+        Log.d("removeBottomView", "count-" + mBottomLayout.getChildCount());
+        //如果底部视图包含了表情面板或者录音面板，则移除它
+        if (mBottomLayout.getChildCount() == 3) {
+            mBottomLayout.removeViewAt(2);
+        }
+    }
+
+    /**
+     * 改变面板
+     *
+     * @param view
+     */
+    private void changePanel(View view) {
+        InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        im.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+        /**
+         * 首先判断该视图是否存在，存在就删除，不存在就添加（添加有个条件就是，要除去第三个位置的视图）
+         */
+        Log.d("changePanel", "count-" + mBottomLayout.getChildCount());
+        if (mBottomLayout.indexOfChild(view) != -1) {
+            mBottomLayout.removeView(view);
+        } else {
+            if (mBottomLayout.getChildCount() == 3) {
+                mBottomLayout.removeViewAt(2);
+            }
+            mBottomLayout.addView(view, 2);
+            Log.d("changePanel", "count-" + mBottomLayout.getChildCount());
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeLayout.setRefreshing(false);
+            }
+        }, 5000);
     }
 }
 

@@ -18,5 +18,8 @@
     <drawable name="color_play_record_menu">#282e35</drawable>
     <color name="color_1E2021">#1E2021</color>
 	<color name="color_323538">#323538</color>
+
+    <color name="material_500">#9c27b0</color>
+    <color name="material_700">#7b1fa2</color>
 </resources>
 

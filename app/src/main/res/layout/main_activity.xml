@@ -41,53 +41,57 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
+        android:layout_alignParentBottom="true"
+        android:animateLayoutChanges="true"
+        android:id="@+id/layout_bottom">
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.7dip"
             android:background="#d6dee2" />
+
         <LinearLayout
             android:layout_width="fill_parent"
-            android:id="@+id/layout_bottom"
             android:paddingBottom="8dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingTop="8dp"
-            android:layout_height="50dp">
-        <ImageView
-            android:id="@+id/chat_record"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dip"
-            android:background="@drawable/selector_btn_chat_record" />
+            android:layout_height="wrap_content">
 
-        <com.bruce.chatui.ClipEditText
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:id="@+id/edit_text"
-            android:background="@drawable/bg_group_chat_input"
-            android:maxLines="4"
-            android:paddingLeft="10dip"
-            android:paddingRight="10dip" />
+            <ImageView
+                android:id="@+id/chat_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/selector_btn_chat_record" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/chat_smile"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dip"
-            android:background="@drawable/selector_btn_smiley" />
+            <com.bruce.chatui.ClipEditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/edit_text"
+                android:background="@drawable/bg_group_chat_input"
+                android:maxLines="4"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/chat_item"
-            android:layout_marginLeft="10dip"
-            android:src="@drawable/selector_btn_chat_item" />
-    </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chat_smile"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/selector_btn_smiley" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chat_item"
+                android:layout_marginLeft="10dip"
+                android:background="@drawable/selector_btn_chat_item" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
