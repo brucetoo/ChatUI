@@ -60,6 +60,7 @@ public class MainActivity extends RoboFragmentActivity {
         initSmileyPanel();
         initCameraPanel();
 
+
         initMainPanel();
     }
 
