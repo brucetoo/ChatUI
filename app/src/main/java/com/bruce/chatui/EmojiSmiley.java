@@ -253,34 +253,6 @@ public class EmojiSmiley {
 		map.put("#148", Emoji.fromResource(R.drawable.emotions_xiyou_148, "[emts]_xiyou_0139_\r\n可爱兔\r\n#148[/emts]", false, 148,"[#148]",Emoji.EMOJI_GAME));
 		map.put("#149", Emoji.fromResource(R.drawable.emotions_xiyou_149, "[emts]_xiyou_0140_\r\n感动兔\r\n#149[/emts]", false, 149,"[#149]",Emoji.EMOJI_GAME));
 		map.put("#150", Emoji.fromResource(R.drawable.emotions_xiyou_150, "[emts]_xiyou_0141_\r\n拍死\r\n#150[/emts]", true, 150,"[#150]",Emoji.EMOJI_GAME));
-		map.put("#151", Emoji.fromResource(R.drawable.emotions_xiyou_151, "[emts]_xiyou_0151_\r\n礼物\r\n#151[/emts]", true, 151,"[#151]",Emoji.EMOJI_GAME));
-		map.put("#152", Emoji.fromResource(R.drawable.emotions_xiyou_152, "[emts]_xiyou_0152_\r\n鬼脸\r\n#152[/emts]", true, 152,"[#152]",Emoji.EMOJI_GAME));
-		map.put("#153", Emoji.fromResource(R.drawable.emotions_xiyou_153, "[emts]_xiyou_0153_\r\n不信\r\n#153[/emts]", true, 153,"[#153]",Emoji.EMOJI_GAME));
-		map.put("#154", Emoji.fromResource(R.drawable.emotions_xiyou_154, "[emts]_xiyou_0154_\r\n吃货\r\n#154[/emts]", true, 154,"[#154]",Emoji.EMOJI_GAME));
-		map.put("#155", Emoji.fromResource(R.drawable.emotions_xiyou_155, "[emts]_xiyou_0155_\r\n开饭啦\r\n#155[/emts]", true, 155,"[#155]",Emoji.EMOJI_GAME));
-		map.put("#156", Emoji.fromResource(R.drawable.emotions_xiyou_156, "[emts]_xiyou_0156_\r\n飞吻\r\n#156[/emts]", true, 156,"[#156]",Emoji.EMOJI_GAME));
-		map.put("#157", Emoji.fromResource(R.drawable.emotions_xiyou_157, "[emts]_xiyou_0157_\r\n放空\r\n#157[/emts]", true, 157,"[#157]",Emoji.EMOJI_GAME));
-		map.put("#158", Emoji.fromResource(R.drawable.emotions_xiyou_158, "[emts]_xiyou_0158_\r\n骂\r\n#158[/emts]", true, 158,"[#158]",Emoji.EMOJI_GAME));
-		map.put("#159", Emoji.fromResource(R.drawable.emotions_xiyou_159, "[emts]_xiyou_0159_\r\n卖萌\r\n#159[/emts]", true, 159,"[#159]",Emoji.EMOJI_GAME));
-		map.put("#160", Emoji.fromResource(R.drawable.emotions_xiyou_160, "[emts]_xiyou_0160_\r\n喷血\r\n#160[/emts]", true, 160,"[#160]",Emoji.EMOJI_GAME));
-		map.put("#161", Emoji.fromResource(R.drawable.emotions_xiyou_161, "[emts]_xiyou_0161_\r\n装傻\r\n#161[/emts]", true, 161,"[#161]",Emoji.EMOJI_GAME));
-		map.put("#162", Emoji.fromResource(R.drawable.emotions_xiyou_162, "[emts]_xiyou_0162_\r\n哼\r\n#162[/emts]", true, 162,"[#162]",Emoji.EMOJI_GAME));
-		map.put("#163", Emoji.fromResource(R.drawable.emotions_xiyou_163, "[emts]_xiyou_0163_\r\n推倒\r\n#163[/emts]", true, 163,"[#163]",Emoji.EMOJI_GAME));
-		map.put("#164", Emoji.fromResource(R.drawable.emotions_xiyou_164, "[emts]_xiyou_0164_\r\n挖鼻孔\r\n#164[/emts]", true, 164,"[#164]",Emoji.EMOJI_GAME));
-		map.put("#165", Emoji.fromResource(R.drawable.emotions_xiyou_165, "[emts]_xiyou_0165_\r\n挥手绢\r\n#165[/emts]", true, 165,"[#165]",Emoji.EMOJI_GAME));
-		map.put("#166", Emoji.fromResource(R.drawable.emotions_xiyou_166, "[emts]_xiyou_0166_\r\n我信了\r\n#166[/emts]", true, 166,"[#166]",Emoji.EMOJI_GAME));
-		map.put("#167", Emoji.fromResource(R.drawable.emotions_xiyou_167, "[emts]_xiyou_0167_\r\n啃萝卜\r\n#167[/emts]", true, 167,"[#167]",Emoji.EMOJI_GAME));
-		map.put("#168", Emoji.fromResource(R.drawable.emotions_xiyou_168, "[emts]_xiyou_0168_\r\n吃惊\r\n#168[/emts]", true, 168,"[#168]",Emoji.EMOJI_GAME));
-		map.put("#169", Emoji.fromResource(R.drawable.emotions_xiyou_169, "[emts]_xiyou_0169_\r\n1秒变格格\r\n#169[/emts]", true, 169,"[#169]",Emoji.EMOJI_GAME));
-		map.put("#170", Emoji.fromResource(R.drawable.emotions_xiyou_170, "[emts]_xiyou_0170_\r\n耳光\r\n#170[/emts]", true, 170,"[#170]",Emoji.EMOJI_GAME));
-		map.put("#171", Emoji.fromResource(R.drawable.emotions_xiyou_171, "", true, 171,"",Emoji.EMOJI_GAME));
-		map.put("#172", Emoji.fromResource(R.drawable.emotions_xiyou_172, "", true, 172,"",Emoji.EMOJI_GAME));
-		map.put("#173", Emoji.fromResource(R.drawable.emotions_xiyou_173, "", true, 173,"",Emoji.EMOJI_GAME));
-		map.put("#174", Emoji.fromResource(R.drawable.emotions_xiyou_174, "", true, 174,"",Emoji.EMOJI_GAME));
-		map.put("#175", Emoji.fromResource(R.drawable.emotions_xiyou_175, "", true, 175,"",Emoji.EMOJI_GAME));
-		map.put("#176", Emoji.fromResource(R.drawable.emotions_xiyou_176, "", true, 176,"",Emoji.EMOJI_GAME));
-		map.put("#177", Emoji.fromResource(R.drawable.emotions_xiyou_177, "", true, 177,"",Emoji.EMOJI_GAME));
-		map.put("#178", Emoji.fromResource(R.drawable.emotions_xiyou_178, "", true, 178,"",Emoji.EMOJI_GAME));
 	}
 	
 	public static Drawable getSmileyDrawable(Context context,String id) {

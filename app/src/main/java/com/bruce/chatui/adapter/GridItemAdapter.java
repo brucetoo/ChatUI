@@ -69,6 +69,7 @@ public class GridItemAdapter extends BaseAdapter {
 
         //删除键
         if (position == getCount() - 1) {
+            imageView.setVisibility(View.VISIBLE);
             imageView.setImageResource(R.drawable.ic_label_delete);
 //           imageView.setTag(R.drawable.ic_label_delete);
         }

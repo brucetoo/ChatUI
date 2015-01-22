@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 
 import com.bruce.chatui.adapter.PhraseAdapter;
 import com.bruce.chatui.adapter.SmileyPagerAdapter;
+import com.bruce.chatui.utils.Logger;
 
 /**
  * Created by N1007 on 2015/1/20.
@@ -114,7 +114,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
         @Override
         public void afterTextChanged(Editable s) {
-            Log.d("---------------------", "afterTextChanged" + s.toString());
+            Logger.debug("---------------------", "afterTextChanged" + s.toString());
             if (!TextUtils.isEmpty(s.toString())) {
                 isSend = true;
                 mSend.setBackgroundResource(R.drawable.selector_btn_send);
@@ -241,11 +241,11 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                  * 如果现在是第一页，保持第二页中数据的在其数据的第一页
                  * 如果是第二页，保持第一页数据最后一页
                  */
-                if (position == 0) {
-                    ((SmileyPagerAdapter) mViewPager.getAdapter()).instantiateItem(mViewPager, 1).setItemFirst();
-                } else if (position == 1) {
-                    ((SmileyPagerAdapter) mViewPager.getAdapter()).instantiateItem(mViewPager, 0).setItemLast();
-                }
+//                if (position == 0) {
+//                    ((SmileyPagerAdapter) mViewPager.getAdapter()).instantiateItem(mViewPager, 1).setItemFirst();
+//                } else if (position == 1) {
+//                    ((SmileyPagerAdapter) mViewPager.getAdapter()).instantiateItem(mViewPager, 0).setItemLast();
+//                }
 
                 mDefalutSmiley.setSelected(false);
                 mGameSmiley.setSelected(false);
@@ -324,7 +324,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
      * 移除底部的view
      */
     private void removeBottomView() {
-        Log.d("removeBottomView", "count-" + mBottomLayout.getChildCount());
+        Logger.debug("removeBottomView", "count-" + mBottomLayout.getChildCount());
         //如果底部视图包含了表情面板或者录音面板，则移除它
         if (mBottomLayout.getChildCount() == 3) {
             mBottomLayout.removeViewAt(2);
@@ -342,7 +342,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         /**
          * 首先判断该视图是否存在，存在就删除，不存在就添加（添加有个条件就是，要除去第三个位置的视图）
          */
-        Log.d("changePanel", "count-" + mBottomLayout.getChildCount());
+        Logger.debug("changePanel", "count-" + mBottomLayout.getChildCount());
         if (mBottomLayout.indexOfChild(view) != -1) {
             mBottomLayout.removeView(view);
         } else {
@@ -350,7 +350,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                 mBottomLayout.removeViewAt(2);
             }
             mBottomLayout.addView(view, 2);
-            Log.d("changePanel", "count-" + mBottomLayout.getChildCount());
+            Logger.debug("changePanel", "count-" + mBottomLayout.getChildCount());
         }
     }
 

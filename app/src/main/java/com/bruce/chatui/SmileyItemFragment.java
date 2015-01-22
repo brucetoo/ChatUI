@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class SmileyItemFragment extends Fragment {
 
+    private static int PAGE_ID = 1;
     public static int SMILEYPAGE_SIZE = 21; //表情每页的个数
     private ViewPager mViewPager;
     private CirclePageIndicator mIndicator;
@@ -62,6 +63,12 @@ public class SmileyItemFragment extends Fragment {
         mAdapter.setmDeleteListener(mDeleteListener);
         mAdapter.setmSelectListener(mSelectListener);
         mViewPager.setAdapter(mAdapter);
+        /**
+         * 在不同地方用到同一套UI中的viewPager，有时候会导致第二次在使用的时候ViewPager数据加载不出来。
+         * 这样就必须对ViewPager设置不同的 ID（可以先注释下方代码对不效果）
+         */
+        mViewPager.setId(PAGE_ID);
+        PAGE_ID++;
         mIndicator.setViewPager(mViewPager);
         return view;
     }
