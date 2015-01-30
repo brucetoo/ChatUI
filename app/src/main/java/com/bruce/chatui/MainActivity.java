@@ -1,6 +1,7 @@
 package com.bruce.chatui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -44,6 +45,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
      */
     private View mSmiley; //表情面板
     private View mCamera; //相机面板
+    private View mVoice; //录音面板
     private ViewPager mViewPager;
     private ListView mSmileyListView;
     private TextView mDefalutSmiley;
@@ -59,8 +61,10 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         initView();
         initSmileyPanel();
         initCameraPanel();
+        initRecordPanel();
         initMainPanel();
     }
+
 
     private void initView() {
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.layout_swipe);
@@ -72,6 +76,13 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         mBottomLayout = (LinearLayout) findViewById(R.id.layout_bottom);
     }
 
+    /**
+     * 录制语音面板初始化
+     */
+    private void initRecordPanel() {
+        mVoice = View.inflate(this, R.layout.view_record, null);
+
+    }
 
     /**
      * 主界面的操作设置
@@ -86,7 +97,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         mEditText.setOnFocusChangeListener(mFocusChangeListener);
         mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeResources(R.color.material_700,R.color.material_500);
+        mSwipeLayout.setColorSchemeResources(R.color.material_700, R.color.material_500);
     }
 
     private View.OnFocusChangeListener mFocusChangeListener = new View.OnFocusChangeListener() {
@@ -158,7 +169,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     private View.OnClickListener mRecordClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            changePanel(mVoice);
         }
     };
     /**
@@ -195,7 +206,9 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MainActivity.this,PickPictureActivity.class);
+                startActivityForResult(intent,1);
+                overridePendingTransition(R.anim.album_enter,R.anim.album_exit);
             }
         });
 
