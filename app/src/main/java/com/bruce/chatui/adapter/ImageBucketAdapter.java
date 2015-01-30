@@ -5,8 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bruce.chatui.R;
+import com.bruce.chatui.utils.Logger;
 import com.bruce.chatui.utils.album.ImageBucket;
 import com.squareup.picasso.Picasso;
 
@@ -44,14 +46,16 @@ public class ImageBucketAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder = ViewHolder.newInstance(mContext, convertView, parent, R.layout.list_view_album);
-        holder.setText(R.id.name,mList.get(position).bucketName);
-        holder.setText(R.id.count,mList.get(position).count);
+//        holder.setText(R.id.name,mList.get(position).bucketName);
+//        holder.setText(R.id.count,mList.get(position).count);
+        ( (TextView) holder.getView(R.id.count)).setText("(" + mList.get(position).count + ")");
+        ( (TextView) holder.getView(R.id.name)).setText(mList.get(position).bucketName);
        // holder.setImageResource(,R.id.image);
-        //mList.get(position).imageList.get(0).getImageId()
-        Picasso.with(mContext).load(mList.get(position).imageList.get(0).getThumbnailPath())
+        Logger.debug("getView-ImagePath:",mList.get(position).imageList.get(0).getImagePath());
+//        Logger.debug("getView-ThumbnailPath:",mList.get(position).imageList.get(0).getThumbnailPath());
+        Picasso.with(mContext).load("file://"+mList.get(position).imageList.get(0).getImagePath())
                 .placeholder(R.drawable.default_album_image)
-                .centerInside()
-                .into((ImageView)holder.getView(R.id.image));
+                .into(((ImageView) holder.getView(R.id.image)));
         return holder.getView();
     }
 
