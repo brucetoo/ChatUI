@@ -12,7 +12,7 @@
         android:gravity="center_horizontal">
         <ImageView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_btn_photo"
+            android:background="@drawable/take_photo_btn_bg"
             android:id="@+id/btn_phone"/>
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         android:gravity="center_horizontal">
         <ImageView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_btn_camera"
+            android:background="@drawable/take_camera_btn_bg"
             android:id="@+id/btn_camera"/>
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"

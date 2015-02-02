@@ -1,6 +1,7 @@
 package com.bruce.chatui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -10,7 +11,9 @@ import android.widget.TextView;
 import com.bruce.chatui.R;
 import com.bruce.chatui.utils.Logger;
 import com.bruce.chatui.utils.album.ImageBucket;
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -52,10 +55,15 @@ public class ImageBucketAdapter extends BaseAdapter {
         ( (TextView) holder.getView(R.id.name)).setText(mList.get(position).bucketName);
        // holder.setImageResource(,R.id.image);
         Logger.debug("getView-ImagePath:",mList.get(position).imageList.get(0).getImagePath());
-//        Logger.debug("getView-ThumbnailPath:",mList.get(position).imageList.get(0).getThumbnailPath());
-        Picasso.with(mContext).load("file://"+mList.get(position).imageList.get(0).getImagePath())
-                .placeholder(R.drawable.default_album_image)
-                .into(((ImageView) holder.getView(R.id.image)));
+        DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(R.drawable.default_album_image)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .bitmapConfig(Bitmap.Config.RGB_565).build();
+        ImageLoader.getInstance().displayImage("file://"+mList.get(position).imageList.get(0).getImagePath(),((ImageView) holder.getView(R.id.image)),
+                displayOptions);
+
         return holder.getView();
     }
 

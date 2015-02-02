@@ -78,8 +78,8 @@
                 android:paddingRight="10dip" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:id="@+id/chat_smile"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dip"

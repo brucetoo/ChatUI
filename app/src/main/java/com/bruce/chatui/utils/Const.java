@@ -6,4 +6,5 @@ package com.bruce.chatui.utils;
 public class Const {
 
     public static final boolean IS_DEBUG = true;
+    public static final int MAX_SELECT_IMAGE_COUNT = 5; //照片最多选择个数
 }

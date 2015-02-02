@@ -206,6 +206,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                removeBottomView();
                 Intent intent = new Intent(MainActivity.this,PickPictureActivity.class);
                 startActivityForResult(intent,1);
                 overridePendingTransition(R.anim.album_enter,R.anim.album_exit);

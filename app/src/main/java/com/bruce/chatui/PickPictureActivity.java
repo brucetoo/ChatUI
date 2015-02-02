@@ -1,12 +1,16 @@
 package com.bruce.chatui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.bruce.chatui.adapter.ImageBucketAdapter;
 import com.bruce.chatui.utils.album.AlbumTool;
 import com.bruce.chatui.utils.album.ImageBucket;
 
+import java.io.Serializable;
 import java.util.List;
 
 import roboguice.activity.RoboActivity;
@@ -34,6 +38,17 @@ public class PickPictureActivity extends RoboActivity {
         initData();
         mAdapter = new ImageBucketAdapter(this,abList);
         pick_list.setAdapter(mAdapter);
+        pick_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(PickPictureActivity.this,ImageGridActivity.class);
+                intent.putExtra("image_list",(Serializable)abList.get(position).imageList);
+                intent.putExtra("ablum_name",abList.get(position).bucketName);
+                startActivity(intent);
+                setResult(RESULT_OK,null);
+                PickPictureActivity.this.finish();
+            }
+        });
     }
 
     /**
@@ -44,4 +59,10 @@ public class PickPictureActivity extends RoboActivity {
         abList = albumTool.getImagesBucketList(true);
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.album_enter,R.anim.album_exit);
+    }
 }

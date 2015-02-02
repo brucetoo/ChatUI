@@ -26,5 +26,5 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'org.roboguice:roboguice:3.+'
     provided 'org.roboguice:roboblender:3.+'
-    compile 'com.squareup.picasso:picasso:2.4.0'
+    compile files('libs/universal-image-loader-1.9.3.jar')
 }
