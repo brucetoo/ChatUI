@@ -2,8 +2,12 @@ package com.bruce.chatui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,6 +28,8 @@ import android.widget.TextView;
 import com.bruce.chatui.adapter.PhraseAdapter;
 import com.bruce.chatui.adapter.SmileyPagerAdapter;
 import com.bruce.chatui.utils.Logger;
+
+import java.io.File;
 
 /**
  * Created by N1007 on 2015/1/20.
@@ -52,6 +58,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     private TextView mGameSmiley;
     private TextView mPharseSmiley;
     private boolean isSend;
+    private String takePhotoSavePath;
 
 
     @Override
@@ -207,18 +214,47 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             @Override
             public void onClick(View v) {
                 removeBottomView();
-                Intent intent = new Intent(MainActivity.this,PickPictureActivity.class);
-                startActivityForResult(intent,1);
-                overridePendingTransition(R.anim.album_enter,R.anim.album_exit);
+                Intent intent = new Intent(MainActivity.this, PickPictureActivity.class);
+                startActivityForResult(intent, 1);
+                overridePendingTransition(R.anim.album_enter, R.anim.album_exit);
             }
         });
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                removeBottomView();
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                takePhotoSavePath = getImageSavePath(String.valueOf(System.currentTimeMillis()) + ".jpg");
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(takePhotoSavePath)));
+                startActivityForResult(intent, 1);
             }
         });
+    }
+
+    /**
+     * 获取图片的保存路径
+     *
+     * @param fileName
+     * @return
+     */
+    public static String getImageSavePath(String fileName) {
+
+        if (TextUtils.isEmpty(fileName)) {
+            return null;
+        }
+
+        final File folder = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath()
+                + File.separator
+                + "Brucetoo" //文件夹名
+                + File.separator
+                + "images");
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        return folder.getAbsolutePath() + File.separator + fileName;
     }
 
     /**
@@ -376,6 +412,33 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                 mSwipeLayout.setRefreshing(false);
             }
         }, 5000);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) { //take photo
+            handTakePhotoData(data);
+        }
+    }
+
+    /**
+     * 处理拍照后的数据
+     *
+     * @param data
+     */
+    private void handTakePhotoData(Intent data) {
+        if (data != null) {
+            Bundle bundle = data.getExtras();
+            Bitmap bitmap = (Bitmap) bundle.get("data");
+            Logger.info("bitmap-info:",bitmap.toString());
+        }else{
+            //从takePhotoSavePath 中获取bitmap
+            Logger.info("bitmap-info:",takePhotoSavePath);
+        }
+        //压缩处理.
+        //上传至服务器
+        //加入消息队列.....
     }
 }
 
