@@ -24,10 +24,10 @@
             android:layout_marginRight="5dp" />
 
        <FrameLayout
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content">
+           android:layout_width="fill_parent"
+           android:layout_height="fill_parent">
 
-           <com.bruce.chatui.thirdView.BubbleImageView
+          <!-- <com.bruce.chatui.thirdView.BubbleImageView
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:src="@drawable/default_image"
@@ -40,7 +40,14 @@
                app:bubble_arrowOffset="3dp"
                app:bubble_arrowTop="10dp"
                app:bubble_arrowWidth="10dp"
-               />
+               />-->
+           <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:src="@drawable/default_image"
+               android:scaleType="centerCrop"
+               android:id="@+id/msg_image"
+               android:visibility="visible"/>
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,7 +65,7 @@
         android:layout_height="42dp"
         android:id="@+id/user_icon"
         android:layout_alignParentRight="true"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:src="@drawable/default_user_portrait"
         app:border_color="@android:color/transparent"
         app:border_width="1dp" />

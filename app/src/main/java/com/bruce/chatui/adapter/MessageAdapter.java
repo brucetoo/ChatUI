@@ -6,17 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bruce.chatui.MessageInfo;
 import com.bruce.chatui.R;
-import com.bruce.chatui.thirdView.BubbleImageView;
+import com.bruce.chatui.thirdView.BubbleImageHelper;
 import com.bruce.chatui.thirdView.CircleImageView;
 import com.bruce.chatui.thirdView.RichTextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 
@@ -34,22 +37,28 @@ public class MessageAdapter extends BaseAdapter {
 
     public static final int VIEW_TYPE_COUNT = 4;
 
-    private ArrayList<MessageInfo> messageList = new ArrayList<MessageInfo>();
+    private ArrayList<MessageInfo> messageList ;
     private Context context;
 
-    public MessageAdapter(Context context, ArrayList<MessageInfo> messageList) {
+    public MessageAdapter(Context context) {
         this.context = context;
-        this.messageList = messageList;
+        messageList = new ArrayList<MessageInfo>();
     }
 
-    public void addMessage(MessageInfo o) {
+    public void addMessage(MessageInfo o, final ListView mListView) {
         messageList.add(o);
         notifyDataSetChanged();
+     //  mListView.smoothScrollToPosition(0);
+        mListView.post(new Runnable() {
+            @Override
+            public void run() {
+                mListView.setSelection(getCount() - 1);
+            }
+        });
     }
 
     public void refreshList(ArrayList<MessageInfo> list) {
-        messageList.clear();
-        messageList.addAll(list);
+        messageList = list;
         notifyDataSetChanged();
     }
 
@@ -146,15 +155,16 @@ public class MessageAdapter extends BaseAdapter {
 
     class ImageMessageHolder extends MessageBaseHolder {
         ProgressBar image_loading;//图片进度
-        BubbleImageView msg_image;
+        ImageView msg_image;
 
         public ImageMessageHolder(View convertView) {
             super(convertView);
-            msg_image = (BubbleImageView) convertView.findViewById(R.id.msg_image);
+            msg_image = (ImageView) convertView.findViewById(R.id.msg_image);
+            image_loading = (ProgressBar) convertView.findViewById(R.id.image_loading);
         }
 
         @Override
-        public void handleData(MessageInfo info) {
+        public void handleData(final MessageInfo info) {
             super.handleData(info);
             DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
                     .showImageForEmptyUri(R.drawable.default_album_image)
@@ -162,7 +172,35 @@ public class MessageAdapter extends BaseAdapter {
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .bitmapConfig(Bitmap.Config.RGB_565).build();
-            ImageLoader.getInstance().displayImage(info.imagePath, msg_image, displayOptions);
+         //   ImageLoader.getInstance().displayImage(info.imagePath, msg_image, displayOptions);
+            ImageLoader.getInstance().loadImage(info.imagePath,new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String s, View view) {
+                     image_loading.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+                }
+
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    Bitmap bmp = null;
+                    image_loading.setVisibility(View.GONE);
+                    if(info.isSend) {
+                        bmp = BubbleImageHelper.getInstance(context).getBubbleImageBitmap(bitmap, R.drawable.send_image_default_bk);
+                    }else {
+                        bmp = BubbleImageHelper.getInstance(context).getBubbleImageBitmap(bitmap, R.drawable.receive_image_default_bk);
+                    }
+                        msg_image.setImageBitmap(bmp);
+                    }
+
+                @Override
+                public void onLoadingCancelled(String s, View view) {
+
+                }
+            });
         }
     }
 

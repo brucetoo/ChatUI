@@ -26,9 +26,8 @@ import java.util.regex.Pattern;
 
 public class RichTextView extends TextView {
 
-	private final static Pattern FACE_PATTERN = Pattern.compile(
-			"\\[emts\\]([\\s\\S]*?)\\[\\/emts\\]", Pattern.CASE_INSENSITIVE); // 判断消息内是否有表情
-
+    private final static Pattern SMILEY_PATTERN = Pattern.compile(
+            "\\[([\\s\\S]*?)\\]|#[0-9]{3}", Pattern.CASE_INSENSITIVE);
 	// 是否自动调整表情大小
 	private boolean mAdjustFaceBounds = true;
 	private OnLinkClickListener mLinkClickListener = new OnLinkClickListener() {
@@ -114,7 +113,7 @@ public class RichTextView extends TextView {
 	}
 
 	private void filterFace(SpannableStringBuilder content) {
-		Matcher matcher = FACE_PATTERN.matcher(content);
+		Matcher matcher = SMILEY_PATTERN.matcher(content);
 		while (matcher.find()) {
 			String key = matcher.group(1);
 			String[] keys = key.split(" ");

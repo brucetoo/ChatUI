@@ -7,6 +7,6 @@ public class MessageInfo {
     public int msgType;
     public String imagePath;
     public String contentText;
-    public boolean isSend;
+    public boolean isSend = false;
     public String time;
 }

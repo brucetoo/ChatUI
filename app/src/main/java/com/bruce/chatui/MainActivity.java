@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -78,12 +77,16 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
     private void initData() {
 
-        for(int i=0;i<10;i++){
+        for (int i = 0; i < 10; i++) {
             MessageInfo info = new MessageInfo();
-            info.msgType = (int) (Math.random()*MessageAdapter.VIEW_TYPE_COUNT);
-            info.contentText = "msg-"+i;
-            info.time = "11:1"+i;
-            info.imagePath = "drawable://"+R.drawable.pic1;
+            info.msgType = (int) (Math.random() * MessageAdapter.VIEW_TYPE_COUNT);
+            info.contentText = "msg-" + i;
+            info.time = "11:1" + i;
+            if (info.msgType == MessageAdapter.MESSAGE_TYPE_RECEIVE_IMAGE)
+                info.isSend = false;
+            else
+                info.isSend = true;
+            info.imagePath = "drawable://" + R.drawable.pic1;
             messageList.add(info);
         }
     }
@@ -121,7 +124,8 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(R.color.material_700, R.color.material_500);
-        adapter = new MessageAdapter(this,messageList);
+        adapter = new MessageAdapter(this);
+        adapter.refreshList(messageList);
         mListView.setAdapter(adapter);
     }
 
@@ -204,8 +208,14 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         @Override
         public void onClick(View v) {
             if (isSend) { //发送逻辑处理
-
-            } else { //更多逻辑处理
+                 MessageInfo in = new MessageInfo();
+                 in.isSend = true;
+                 in.msgType = MessageAdapter.MESSAGE_TYPE_SEND_TEXT;
+                 in.time = "22:22";
+                 in.contentText = mEditText.getText().toString();
+                 adapter.addMessage(in,mListView);
+                 mEditText.setText("");
+            } else { //更多逻辑处理s
                 changePanel(mCamera);
             }
         }
@@ -291,6 +301,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             @Override
             public void onSelected(SpannableString spannableString) {
                 //在edittext框中添加选中的表情
+                Logger.info("selecet SpannableString:",spannableString.toString());
                 mEditText.getText().insert(mEditText.getSelectionStart(), spannableString);
             }
         });
@@ -424,12 +435,11 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeLayout.setRefreshing(false);
-            }
-        }, 5000);
+        messageList.clear();
+        initData();
+        Logger.info("onRefresh:", "" + messageList.size());
+        adapter.refreshList(messageList);
+        mSwipeLayout.setRefreshing(false);
     }
 
     @Override
@@ -449,10 +459,10 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         if (data != null) {
             Bundle bundle = data.getExtras();
             Bitmap bitmap = (Bitmap) bundle.get("data");
-            Logger.info("bitmap-info:",bitmap.toString());
-        }else{
+            Logger.info("bitmap-info:", bitmap.toString());
+        } else {
             //从takePhotoSavePath 中获取bitmap
-            Logger.info("bitmap-info:",takePhotoSavePath);
+            Logger.info("bitmap-info:", takePhotoSavePath);
         }
         //压缩处理.
         //上传至服务器
