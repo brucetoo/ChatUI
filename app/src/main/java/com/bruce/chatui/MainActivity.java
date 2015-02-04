@@ -25,11 +25,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bruce.chatui.adapter.MessageAdapter;
 import com.bruce.chatui.adapter.PhraseAdapter;
 import com.bruce.chatui.adapter.SmileyPagerAdapter;
 import com.bruce.chatui.utils.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by N1007 on 2015/1/20.
@@ -59,17 +61,31 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     private TextView mPharseSmiley;
     private boolean isSend;
     private String takePhotoSavePath;
-
+    private ArrayList<MessageInfo> messageList = new ArrayList<MessageInfo>();
+    private MessageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        initData();
         initView();
         initSmileyPanel();
         initCameraPanel();
         initRecordPanel();
         initMainPanel();
+    }
+
+    private void initData() {
+
+        for(int i=0;i<10;i++){
+            MessageInfo info = new MessageInfo();
+            info.msgType = (int) (Math.random()*MessageAdapter.VIEW_TYPE_COUNT);
+            info.contentText = "msg-"+i;
+            info.time = "11:1"+i;
+            info.imagePath = "drawable://"+R.drawable.pic1;
+            messageList.add(info);
+        }
     }
 
 
@@ -105,6 +121,8 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(R.color.material_700, R.color.material_500);
+        adapter = new MessageAdapter(this,messageList);
+        mListView.setAdapter(adapter);
     }
 
     private View.OnFocusChangeListener mFocusChangeListener = new View.OnFocusChangeListener() {

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ebebeb"
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include layout="@layout/list_item_time_top"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/content"
+        android:layout_toLeftOf="@+id/user_icon"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/msg_tip"
+            android:layout_gravity="center"
+            android:id="@+id/msg_tip"
+            android:visibility="gone"
+            android:layout_marginRight="5dp" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/msg_progress"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            />
+
+        <com.bruce.chatui.thirdView.RichTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/send_message_bkgnd"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text = "ddddddfasdf"
+            android:paddingLeft="5dp"
+            android:paddingRight="20dp"
+            android:gravity="center"
+            android:id="@+id/rich_text" />
+    </LinearLayout>
+
+    <com.bruce.chatui.thirdView.CircleImageView
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:id="@+id/user_icon"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/default_user_portrait"
+        app:border_color="@android:color/transparent"
+        app:border_width="1dp" />
+</RelativeLayout>
