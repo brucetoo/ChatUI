@@ -60,7 +60,7 @@
            </FrameLayout>
     </LinearLayout>
 
-    <com.bruce.chatui.thirdView.CircleImageView
+    <com.bruce.chatui.thirdparty.CircleImageView
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:id="@+id/user_icon"

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bruce.chatui.adapter.SmileyItemPageAdapter;
-import com.bruce.chatui.thirdView.CirclePageIndicator;
+import com.bruce.chatui.thirdparty.CirclePageIndicator;
 
 import java.util.List;
 

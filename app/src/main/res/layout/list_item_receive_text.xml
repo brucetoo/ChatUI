@@ -15,7 +15,7 @@
         android:layout_marginTop="20dp">
 
 
-        <com.bruce.chatui.thirdView.RichTextView
+        <com.bruce.chatui.thirdparty.RichTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/receive_message_bkgnd"
@@ -46,7 +46,7 @@
             />
     </LinearLayout>
 
-    <com.bruce.chatui.thirdView.CircleImageView
+    <com.bruce.chatui.thirdparty.CircleImageView
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:id="@+id/user_icon"

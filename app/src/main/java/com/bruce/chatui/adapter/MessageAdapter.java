@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.bruce.chatui.MessageInfo;
 import com.bruce.chatui.R;
-import com.bruce.chatui.thirdView.BubbleImageHelper;
-import com.bruce.chatui.thirdView.CircleImageView;
-import com.bruce.chatui.thirdView.RichTextView;
+import com.bruce.chatui.thirdparty.BubbleImageHelper;
+import com.bruce.chatui.thirdparty.CircleImageView;
+import com.bruce.chatui.thirdparty.RichTextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;

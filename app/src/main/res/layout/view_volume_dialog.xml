@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/volume_bg"
+    android:background="@drawable/sound_volume_default_bk"
+    android:gravity="center|right"
+    android:padding="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sound_volume_01"
+        android:layout_marginBottom="-7dp"
+        android:layout_marginRight="35dp"
+        android:id="@+id/volume_img"
+        />
+
+</LinearLayout>

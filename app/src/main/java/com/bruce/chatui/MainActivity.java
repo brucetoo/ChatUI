@@ -1,5 +1,6 @@
 package com.bruce.chatui;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,8 +18,10 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -27,6 +30,9 @@ import android.widget.TextView;
 import com.bruce.chatui.adapter.MessageAdapter;
 import com.bruce.chatui.adapter.PhraseAdapter;
 import com.bruce.chatui.adapter.SmileyPagerAdapter;
+import com.bruce.chatui.audio.SpeexEncoder;
+import com.bruce.chatui.audio.utils.AudioPlayerHandler;
+import com.bruce.chatui.audio.utils.AudioRecordHandler;
 import com.bruce.chatui.utils.Logger;
 
 import java.io.File;
@@ -36,6 +42,7 @@ import java.util.ArrayList;
  * Created by N1007 on 2015/1/20.
  */
 public class MainActivity extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
+    private static String TAG = "MainActivity";
     /**
      * 主聊天面板
      */
@@ -53,6 +60,8 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     private View mSmiley; //表情面板
     private View mCamera; //相机面板
     private View mVoice; //录音面板
+    private ImageButton mReVoice;
+    private TextView mReVoiceHint;
     private ViewPager mViewPager;
     private ListView mSmileyListView;
     private TextView mDefalutSmiley;
@@ -63,6 +72,14 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     private ArrayList<MessageInfo> messageList = new ArrayList<MessageInfo>();
     private MessageAdapter adapter;
 
+    private Dialog mVolumeDlg; //音量dialog
+    private LinearLayout mVolumeBg; //背景
+    private ImageView mVolumeImg; //图片
+
+    private AudioRecordHandler mAudioRecorder;
+    private Thread mAudioRecordThread;
+    private boolean mIsAlready = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +89,20 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         initSmileyPanel();
         initCameraPanel();
         initRecordPanel();
+        initVolumeDialog();
         initMainPanel();
+    }
+
+    /**
+     * 音量提示的dialog
+     */
+    private void initVolumeDialog() {
+         mVolumeDlg = new Dialog(this,R.style.SoundVolumeStyle);
+         mVolumeDlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
+         mVolumeDlg.setContentView(R.layout.view_volume_dialog);
+         mVolumeDlg.setCanceledOnTouchOutside(true);
+         mVolumeBg = (LinearLayout) mVolumeDlg.findViewById(R.id.volume_bg);
+         mVolumeImg = (ImageView) mVolumeDlg.findViewById(R.id.volume_img);
     }
 
     private void initData() {
@@ -107,7 +137,9 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
      */
     private void initRecordPanel() {
         mVoice = View.inflate(this, R.layout.view_record, null);
-
+        mReVoice = (ImageButton) mVoice.findViewById(R.id.voice_view);
+        mReVoiceHint = (TextView) mVoice.findViewById(R.id.voice_hint);
+        mReVoice.setOnTouchListener(mVoiceTouchListener);
     }
 
     /**
@@ -138,6 +170,84 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             }
         }
     };
+
+
+    float yDown = 0;
+    float yUp = 0;
+
+    private View.OnTouchListener mVoiceTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            //滑动ListView到底部
+            mListView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListView.setSelection(adapter.getCount() - 1);
+                }
+            });
+
+            switch (event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    yDown = event.getY(); //记录按下时的Y位置
+                    //判断是否正在播放音频
+                    if(AudioPlayerHandler.getInstance().isPlaying())
+                         AudioPlayerHandler.getInstance().stopPlayer();
+                    mReVoiceHint.setVisibility(View.VISIBLE);
+                    mVolumeDlg.show();
+                    mAudioRecorder = new AudioRecordHandler(getAudioPath(),new SpeexEncoder.TaskCallback(){
+                        @Override
+                        public void callback(Object result) {
+                            Logger.info(TAG,"send audio message");
+                        }
+                    });
+
+                    mAudioRecordThread = new Thread(mAudioRecorder);
+                    mIsAlready = false; // 设置未开始录音
+                    mAudioRecorder.setRecording(true);
+                    Logger.info(TAG,"audio start record thread");
+                    mAudioRecordThread.start(); //开启录制音频线程
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    yUp = event.getY(); //移动起来的Y位置
+                    if(yDown - yUp > 50){
+                        mVolumeBg.setBackgroundResource(R.drawable.sound_volume_cancel_bk);
+                    }else{
+                        mVolumeBg.setBackgroundResource(R.drawable.sound_volume_default_bk);
+                    }
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    mReVoiceHint.setVisibility(View.GONE);
+                    //停止录音，隐藏dialog
+                    if(mAudioRecorder.isRecording()){
+                        mAudioRecorder.setRecording(false);
+                    }
+                    
+                    if(mVolumeDlg.isShowing()){
+                        mVolumeDlg.hide();
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return false;
+        }
+    };
+
+    private String getAudioPath(){
+        final File folder = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath()
+                + File.separator
+                + "Bruce"
+                + File.separator
+                + "audio");
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        return  folder.getPath();
+    }
     /**
      * 输入框的输入监听事件
      */
@@ -208,13 +318,13 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         @Override
         public void onClick(View v) {
             if (isSend) { //发送逻辑处理
-                 MessageInfo in = new MessageInfo();
-                 in.isSend = true;
-                 in.msgType = MessageAdapter.MESSAGE_TYPE_SEND_TEXT;
-                 in.time = "22:22";
-                 in.contentText = mEditText.getText().toString();
-                 adapter.addMessage(in,mListView);
-                 mEditText.setText("");
+                MessageInfo in = new MessageInfo();
+                in.isSend = true;
+                in.msgType = MessageAdapter.MESSAGE_TYPE_SEND_TEXT;
+                in.time = "22:22";
+                in.contentText = mEditText.getText().toString();
+                adapter.addMessage(in, mListView);
+                mEditText.setText("");
             } else { //更多逻辑处理s
                 changePanel(mCamera);
             }
@@ -227,7 +337,13 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         @Override
         public void onClick(View v) {
             removeBottomView();
-        }
+            mListView.post(new Runnable() {
+            @Override
+            public void run() {
+                mListView.setSelection(adapter.getCount() - 1);
+            }
+        });
+    }
     };
 
     /**
@@ -301,7 +417,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             @Override
             public void onSelected(SpannableString spannableString) {
                 //在edittext框中添加选中的表情
-                Logger.info("selecet SpannableString:",spannableString.toString());
+                Logger.info("selecet SpannableString:", spannableString.toString());
                 mEditText.getText().insert(mEditText.getSelectionStart(), spannableString);
             }
         });

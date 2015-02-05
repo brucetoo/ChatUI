@@ -49,7 +49,7 @@ public class GridItemAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             imageView = new ImageView(fragment.getActivity());
-            imageView.setScaleType(ImageView.ScaleType.CENTER);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         } else {
             imageView = (ImageView) convertView;
         }
@@ -58,6 +58,8 @@ public class GridItemAdapter extends BaseAdapter {
         AbsListView.LayoutParams param = new AbsListView.LayoutParams(
                 view.getWidth() / 7, view.getHeight() / 3);
         imageView.setLayoutParams(param);
+        imageView.setScaleX(0.7f);
+        imageView.setScaleY(0.7f);
         if (position < emojis.size()) {
             imageView.setVisibility(View.VISIBLE);
             Emoji emoji = emojis.get(position);
