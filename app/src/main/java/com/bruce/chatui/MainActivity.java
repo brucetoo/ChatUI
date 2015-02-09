@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,6 +43,8 @@ import java.util.ArrayList;
  * Created by N1007 on 2015/1/20.
  */
 public class MainActivity extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
+    private static final int MSG_PIC_PHOTO = 0;
+    private static final int MSG_TAKE_PICTURE = 1;
     private static String TAG = "MainActivity";
     /**
      * 主聊天面板
@@ -97,12 +100,12 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
      * 音量提示的dialog
      */
     private void initVolumeDialog() {
-         mVolumeDlg = new Dialog(this,R.style.SoundVolumeStyle);
-         mVolumeDlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-         mVolumeDlg.setContentView(R.layout.view_volume_dialog);
-         mVolumeDlg.setCanceledOnTouchOutside(true);
-         mVolumeBg = (LinearLayout) mVolumeDlg.findViewById(R.id.volume_bg);
-         mVolumeImg = (ImageView) mVolumeDlg.findViewById(R.id.volume_img);
+        mVolumeDlg = new Dialog(this, R.style.SoundVolumeStyle);
+        mVolumeDlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mVolumeDlg.setContentView(R.layout.view_volume_dialog);
+        mVolumeDlg.setCanceledOnTouchOutside(true);
+        mVolumeBg = (LinearLayout) mVolumeDlg.findViewById(R.id.volume_bg);
+        mVolumeImg = (ImageView) mVolumeDlg.findViewById(R.id.volume_img);
     }
 
     private void initData() {
@@ -186,33 +189,37 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                 }
             });
 
-            switch (event.getAction()){
+            switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     yDown = event.getY(); //记录按下时的Y位置
                     //判断是否正在播放音频
-                    if(AudioPlayerHandler.getInstance().isPlaying())
-                         AudioPlayerHandler.getInstance().stopPlayer();
+                    if (AudioPlayerHandler.getInstance().isPlaying())
+                        AudioPlayerHandler.getInstance().stopPlayer();
                     mReVoiceHint.setVisibility(View.VISIBLE);
                     mVolumeDlg.show();
-                    mAudioRecorder = new AudioRecordHandler(getAudioPath(),new SpeexEncoder.TaskCallback(){
+                    mAudioRecorder = new AudioRecordHandler(getAudioPath(), new SpeexEncoder.TaskCallback() {
                         @Override
                         public void callback(Object result) {
-                            Logger.info(TAG,"send audio message");
+                            Logger.info(TAG, "send audio message");
+                            if (mIsAlready) {
+                                //此处发送消息 用Handler处理
+
+                            }
                         }
                     });
 
                     mAudioRecordThread = new Thread(mAudioRecorder);
                     mIsAlready = false; // 设置未开始录音
                     mAudioRecorder.setRecording(true);
-                    Logger.info(TAG,"audio start record thread");
+                    Logger.info(TAG, "audio start record thread");
                     mAudioRecordThread.start(); //开启录制音频线程
                     break;
 
                 case MotionEvent.ACTION_MOVE:
                     yUp = event.getY(); //移动起来的Y位置
-                    if(yDown - yUp > 50){
+                    if (yDown - yUp > 50) {
                         mVolumeBg.setBackgroundResource(R.drawable.sound_volume_cancel_bk);
-                    }else{
+                    } else {
                         mVolumeBg.setBackgroundResource(R.drawable.sound_volume_default_bk);
                     }
                     break;
@@ -220,13 +227,14 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                 case MotionEvent.ACTION_UP:
                     mReVoiceHint.setVisibility(View.GONE);
                     //停止录音，隐藏dialog
-                    if(mAudioRecorder.isRecording()){
+                    if (mAudioRecorder.isRecording()) {
                         mAudioRecorder.setRecording(false);
                     }
-                    
-                    if(mVolumeDlg.isShowing()){
-                        mVolumeDlg.hide();
+
+                    if (mVolumeDlg.isShowing()) {
+                        mVolumeDlg.dismiss();
                     }
+                    mIsAlready = true;
                     break;
                 default:
                     break;
@@ -236,7 +244,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         }
     };
 
-    private String getAudioPath(){
+    private String getAudioPath() {
         final File folder = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath()
                 + File.separator
@@ -246,8 +254,9 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        return  folder.getPath();
+        return folder.getPath();
     }
+
     /**
      * 输入框的输入监听事件
      */
@@ -338,12 +347,12 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         public void onClick(View v) {
             removeBottomView();
             mListView.post(new Runnable() {
-            @Override
-            public void run() {
-                mListView.setSelection(adapter.getCount() - 1);
-            }
-        });
-    }
+                @Override
+                public void run() {
+                    mListView.setSelection(adapter.getCount() - 1);
+                }
+            });
+        }
     };
 
     /**
@@ -359,7 +368,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             public void onClick(View v) {
                 removeBottomView();
                 Intent intent = new Intent(MainActivity.this, PickPictureActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, MSG_PIC_PHOTO);
                 overridePendingTransition(R.anim.album_enter, R.anim.album_exit);
             }
         });
@@ -371,7 +380,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 takePhotoSavePath = getImageSavePath(String.valueOf(System.currentTimeMillis()) + ".jpg");
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(takePhotoSavePath)));
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, MSG_TAKE_PICTURE);
             }
         });
     }
@@ -561,9 +570,32 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) { //take photo
-            handTakePhotoData(data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MSG_PIC_PHOTO) {
+                handPickPhotoData(data);
+            } else if (requestCode == MSG_TAKE_PICTURE) {
+                handTakePhotoData(data);
+            }
         }
+    }
+
+    /**
+     * 选择照片处理
+     *
+     * @param data
+     */
+    private void handPickPhotoData(Intent data) {
+        ArrayList<String> paths = data.getStringArrayListExtra("paths");
+        for (String path : paths) {
+            MessageInfo info = new MessageInfo();
+            info.time = "33:33";
+            info.msgType = MessageAdapter.MESSAGE_TYPE_SEND_IMAGE;
+            info.isSend = true;
+            info.imagePath = path;
+            Log.d(TAG,"handPickPhotoData:"+path);
+            adapter.addMessage(info, mListView);
+        }
+
     }
 
     /**
@@ -576,10 +608,17 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             Bundle bundle = data.getExtras();
             Bitmap bitmap = (Bitmap) bundle.get("data");
             Logger.info("bitmap-info:", bitmap.toString());
+
         } else {
             //从takePhotoSavePath 中获取bitmap
             Logger.info("bitmap-info:", takePhotoSavePath);
         }
+        MessageInfo info = new MessageInfo();
+        info.isSend = true;
+        info.imagePath = "file://"+takePhotoSavePath;
+        info.msgType = MessageAdapter.MESSAGE_TYPE_SEND_IMAGE;
+        info.time = "44:44";
+        adapter.addMessage(info,mListView);
         //压缩处理.
         //上传至服务器
         //加入消息队列.....

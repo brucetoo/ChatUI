@@ -16,7 +16,9 @@ import com.bruce.chatui.adapter.ImageGridAdapter;
 import com.bruce.chatui.utils.Const;
 import com.bruce.chatui.utils.album.ImageItem;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
@@ -49,11 +51,11 @@ public class ImageGridActivity extends RoboActivity {
     private Handler mHander = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-               switch (msg.what){
-                   case 0:
-                       Toast.makeText(ImageGridActivity.this,"选择不能超过"+ Const.MAX_SELECT_IMAGE_COUNT+"个",Toast.LENGTH_SHORT).show();
-                       break;
-               }
+            switch (msg.what) {
+                case 0:
+                    Toast.makeText(ImageGridActivity.this, "选择不能超过" + Const.MAX_SELECT_IMAGE_COUNT + "个", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
     };
 
@@ -67,15 +69,15 @@ public class ImageGridActivity extends RoboActivity {
 
     private void initView() {
         mGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mAdapter = new ImageGridAdapter(this,mList,mHander);
+        mAdapter = new ImageGridAdapter(this, mList, mHander);
         mGridView.setAdapter(mAdapter);
         mAdapter.setTextCallBack(new ImageGridAdapter.TextCallBack() {
             @Override
             public void onListen(int count) {
-                if(count == 0){
+                if (count == 0) {
                     mSend.setText("发送");
-                }else {
-                    mSend.setText("发送"+"("+count+")");
+                } else {
+                    mSend.setText("发送" + "(" + count + ")");
                 }
             }
         });
@@ -102,10 +104,18 @@ public class ImageGridActivity extends RoboActivity {
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mAdapter.getSelectedMap().size()>0){
+                if (mAdapter.getSelectedMap().size() > 0) {
                     //发送消息~~
-                }else{
-                    Toast.makeText(ImageGridActivity.this,"你还没选中任何图片~",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    ArrayList<String> paths = new ArrayList<String>();
+                    for(Map.Entry entry:mAdapter.getSelectedMap().entrySet()){
+                       paths.add("file://"+((ImageItem)entry.getValue()).getImagePath());
+                    }
+                    intent.putExtra("paths",paths);
+                    setResult(RESULT_OK,intent);
+                    ImageGridActivity.this.finish();
+                } else {
+                    Toast.makeText(ImageGridActivity.this, "你还没选中任何图片~", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -113,10 +123,10 @@ public class ImageGridActivity extends RoboActivity {
         mPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mAdapter.getSelectedMap().size()>0){
-                    Toast.makeText(ImageGridActivity.this,"此功能不想做~~",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(ImageGridActivity.this,"你还没选中任何图片~",Toast.LENGTH_SHORT).show();
+                if (mAdapter.getSelectedMap().size() > 0) {
+                    Toast.makeText(ImageGridActivity.this, "此功能不想做~~", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ImageGridActivity.this, "你还没选中任何图片~", Toast.LENGTH_SHORT).show();
                 }
             }
         });

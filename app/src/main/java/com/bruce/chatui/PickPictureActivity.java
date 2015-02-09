@@ -44,9 +44,7 @@ public class PickPictureActivity extends RoboActivity {
                 Intent intent = new Intent(PickPictureActivity.this,ImageGridActivity.class);
                 intent.putExtra("image_list",(Serializable)abList.get(position).imageList);
                 intent.putExtra("ablum_name",abList.get(position).bucketName);
-                startActivity(intent);
-                setResult(RESULT_OK,null);
-                PickPictureActivity.this.finish();
+                startActivityForResult(intent,1);
             }
         });
     }
@@ -64,5 +62,14 @@ public class PickPictureActivity extends RoboActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.album_enter,R.anim.album_exit);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            setResult(RESULT_OK,data);
+            PickPictureActivity.this.finish();
+        }
     }
 }
