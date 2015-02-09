@@ -57,7 +57,7 @@
 
  ********************************************************************/
 
-package com.bruce.chatui.audio.ogg;
+package com.mogujie.tt.support.audio.ogg;
 
 /**
  * Calculates the CRC checksum for Ogg packets.

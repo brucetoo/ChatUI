@@ -1,8 +1,8 @@
 
-package com.bruce.chatui.audio;
+package com.mogujie.tt.support.audio;
 
-import com.bruce.chatui.audio.ogg.OggSpeexWriter;
 import com.bruce.chatui.utils.Logger;
+import com.mogujie.tt.support.audio.ogg.OggSpeexWriter;
 
 import java.io.IOException;
 

@@ -30,10 +30,10 @@ import android.widget.TextView;
 import com.bruce.chatui.adapter.MessageAdapter;
 import com.bruce.chatui.adapter.PhraseAdapter;
 import com.bruce.chatui.adapter.SmileyPagerAdapter;
-import com.bruce.chatui.audio.SpeexEncoder;
-import com.bruce.chatui.audio.utils.AudioPlayerHandler;
-import com.bruce.chatui.audio.utils.AudioRecordHandler;
+import com.mogujie.tt.support.audio.AudioPlayerHandler;
+import com.mogujie.tt.support.audio.AudioRecordHandler;
 import com.bruce.chatui.utils.Logger;
+import com.mogujie.tt.support.audio.SpeexEncoder;
 
 import java.io.File;
 import java.util.ArrayList;

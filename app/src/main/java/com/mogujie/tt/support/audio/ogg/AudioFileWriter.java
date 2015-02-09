@@ -34,7 +34,7 @@
 
 /* $Id: AudioFileWriter.java,v 1.1 2011/12/27 04:39:13 gauss Exp $ */
 
-package com.bruce.chatui.audio.ogg;
+package com.mogujie.tt.support.audio.ogg;
 
 import java.io.DataOutput;
 import java.io.File;

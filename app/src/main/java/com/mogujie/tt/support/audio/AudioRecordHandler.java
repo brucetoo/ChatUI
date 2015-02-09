@@ -1,11 +1,10 @@
 
-package com.bruce.chatui.audio.utils;
+package com.mogujie.tt.support.audio;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 
-import com.bruce.chatui.audio.SpeexEncoder;
 import com.bruce.chatui.utils.Const;
 import com.bruce.chatui.utils.Logger;
 

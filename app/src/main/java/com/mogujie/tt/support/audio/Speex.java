@@ -1,4 +1,4 @@
-package com.bruce.chatui.audio;
+package com.mogujie.tt.support.audio;
 
 /**
  * JNI调用
@@ -27,7 +27,6 @@ public class Speex {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-
     }
 
     public native int open(int compression);

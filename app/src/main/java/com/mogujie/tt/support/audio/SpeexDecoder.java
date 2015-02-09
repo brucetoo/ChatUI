@@ -1,13 +1,13 @@
 
-package com.bruce.chatui.audio;
+package com.mogujie.tt.support.audio;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.RecoverySystem.ProgressListener;
 
-import com.bruce.chatui.audio.ogg.OggCrc;
 import com.bruce.chatui.utils.Logger;
+import com.mogujie.tt.support.audio.ogg.OggCrc;
 
 import java.io.EOFException;
 import java.io.File;
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * speex 解码
  */

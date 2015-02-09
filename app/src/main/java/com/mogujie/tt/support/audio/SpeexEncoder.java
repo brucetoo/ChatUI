@@ -1,5 +1,5 @@
 
-package com.bruce.chatui.audio;
+package com.mogujie.tt.support.audio;
 
 import com.bruce.chatui.utils.Logger;
 

@@ -1,7 +1,5 @@
 
-package com.bruce.chatui.audio.utils;
-
-import com.bruce.chatui.audio.SpeexDecoder;
+package com.mogujie.tt.support.audio;
 
 import java.io.File;
 

@@ -34,7 +34,7 @@
 
 /* $Id: OggSpeexWriter.java,v 1.2 2011/12/28 02:45:11 gauss Exp $ */
 
-package com.bruce.chatui.audio.ogg;
+package com.mogujie.tt.support.audio.ogg;
 
 import java.io.File;
 import java.io.FileOutputStream;
