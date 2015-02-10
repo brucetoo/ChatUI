@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ebebeb"
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include layout="@layout/list_item_time_top" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/content"
+        android:layout_marginTop="30dp"
+        android:layout_toRightOf="@+id/user_icon"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/send_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="20dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_chat_left">
+
+            <View
+                android:id="@+id/anim"
+                android:layout_width="11dp"
+                android:layout_height="16dp"
+                android:background="@drawable/receive_audio" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22''"
+            android:textColor="@color/material_blue_grey_950"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/audio_length" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/msg_progress"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/msg_tip"
+            android:layout_gravity="center"
+            android:id="@+id/msg_tip"
+            android:visibility="gone"
+            android:layout_marginRight="5dp" />
+
+    </LinearLayout>
+
+    <com.bruce.chatui.thirdparty.CircleImageView
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:id="@+id/user_icon"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/default_user_portrait"
+        app:border_color="@android:color/transparent"
+        app:border_width="1dp" />
+</RelativeLayout>

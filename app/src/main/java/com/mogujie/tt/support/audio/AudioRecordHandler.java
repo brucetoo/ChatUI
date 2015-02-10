@@ -4,7 +4,10 @@ package com.mogujie.tt.support.audio;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Message;
+import android.util.Log;
 
+import com.bruce.chatui.MainActivity;
 import com.bruce.chatui.utils.Const;
 import com.bruce.chatui.utils.Logger;
 
@@ -77,6 +80,7 @@ public class AudioRecordHandler implements Runnable {
                         /**
                          * UI界面提示录音太长
                          */
+                     MainActivity.getmHandler().sendEmptyMessage(Const.RECORD_TOO_LONG);
                       /*  MessageActivity.getUiHandler().sendEmptyMessage(
                                 HandlerConstant.RECORD_AUDIO_TOO_LONG);*/
                         break;
@@ -93,7 +97,7 @@ public class AudioRecordHandler implements Runnable {
                         throw new IllegalStateException(
                                 "read() returned AudioRecord.ERROR_INVALID_OPERATION");
                     }
-                    Logger.info("","chat#audio#put data into encoder collector....");
+                    Logger.info("", "chat#audio#put data into encoder collector....");
                     encoder.putData(tempBuffer, bufferRead);
                     maxVolumeEnd = System.currentTimeMillis();
                     setMaxVolume(tempBuffer, bufferRead);
@@ -124,10 +128,11 @@ public class AudioRecordHandler implements Runnable {
                     max = Math.abs(buffer[i]);
                 }
             }
-          /*  Message Msg = new Message();
+            Message Msg = new Message();
             Msg.what = Const.RECEIVE_MAX_VOLUME;
             Msg.obj = max;
-            MessageActivity.getUiHandler().sendMessage(Msg);*/
+            Log.i("sendvoice-------",max+"");
+            MainActivity.getmHandler().sendMessage(Msg);
         } catch (Exception e) {
         }
     }

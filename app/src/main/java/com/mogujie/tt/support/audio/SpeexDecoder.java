@@ -4,8 +4,11 @@ package com.mogujie.tt.support.audio;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.os.Message;
 import android.os.RecoverySystem.ProgressListener;
 
+import com.bruce.chatui.MainActivity;
+import com.bruce.chatui.utils.Const;
 import com.bruce.chatui.utils.Logger;
 import com.mogujie.tt.support.audio.ogg.OggCrc;
 
@@ -17,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * speex 解码
+ * speex 解码 包括播放完成后通知UI界面停止动画播放
  */
 public class SpeexDecoder {
     protected Speex speexDecoder;
@@ -181,10 +184,10 @@ public class SpeexDecoder {
             /**
              * 通知UI界面停止播放
              */
-       /*     Message message = Message.obtain();
-            message.what = HandlerConstant.HANDLER_STOP_PLAY;
+            Message message = Message.obtain();
+            message.what = Const.RECORD_STOP_PLAY;
             message.obj = this.srcPath.getAbsolutePath();
-            MessageActivity.getUiHandler().sendMessage(message);*/
+            MainActivity.getmHandler().sendMessage(message);
         }
 
         dis.close();

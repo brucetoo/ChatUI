@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -27,13 +29,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bruce.chatui.adapter.MessageAdapter;
 import com.bruce.chatui.adapter.PhraseAdapter;
 import com.bruce.chatui.adapter.SmileyPagerAdapter;
+import com.bruce.chatui.utils.Const;
+import com.bruce.chatui.utils.Logger;
 import com.mogujie.tt.support.audio.AudioPlayerHandler;
 import com.mogujie.tt.support.audio.AudioRecordHandler;
-import com.bruce.chatui.utils.Logger;
 import com.mogujie.tt.support.audio.SpeexEncoder;
 
 import java.io.File;
@@ -81,12 +85,19 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
     private AudioRecordHandler mAudioRecorder;
     private Thread mAudioRecordThread;
-    private boolean mIsAlready = false;
+    private boolean mIsAlready = false; //录音是否完成
+    private static Handler mHandler = null;
+    private String mAudioPath = null;
+
+    public static Handler getmHandler() {
+        return mHandler;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        initHander();
         initData();
         initView();
         initSmileyPanel();
@@ -95,6 +106,31 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         initVolumeDialog();
         initMainPanel();
     }
+
+    private void initHander() {
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case Const.RECEIVE_MAX_VOLUME:
+                        Log.i("receivevoice-------", "");
+                        onReceiveMaxVolume((Integer) msg.obj);
+                        break;
+                    case Const.RECORD_TOO_LONG:
+                        Toast.makeText(MainActivity.this, "录音时间太长", Toast.LENGTH_SHORT).show();
+                        break;
+                    case Const.RECORD_MSG_OVER:
+                        onRecordOver((Float) msg.obj);
+                        break;
+                    case Const.RECORD_STOP_PLAY:
+                        adapter.stopAnimaiton((String) msg.obj);
+                        break;
+                }
+            }
+        };
+    }
+
 
     /**
      * 音量提示的dialog
@@ -112,13 +148,24 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
         for (int i = 0; i < 10; i++) {
             MessageInfo info = new MessageInfo();
-            info.msgType = (int) (Math.random() * MessageAdapter.VIEW_TYPE_COUNT);
+            info.msgType = (int) (Math.random() * 6);
             info.contentText = "msg-" + i;
             info.time = "11:1" + i;
             if (info.msgType == MessageAdapter.MESSAGE_TYPE_RECEIVE_IMAGE)
                 info.isSend = false;
             else
                 info.isSend = true;
+            if (info.msgType == MessageAdapter.MESSAGE_TYPE_SEND_AUDIO || info.msgType == MessageAdapter.MESSAGE_TYPE_RECEIVE_AUDIO) {
+                info.audioPath = Environment.getExternalStorageDirectory()
+                        .getAbsolutePath()
+                        + File.separator
+                        + "Brucetoo"
+                        + File.separator
+                        + "audio"
+                        + File.separator
+                        +"1423555852706"+".spx";
+                info.audioLen = "4";
+            }
             info.imagePath = "drawable://" + R.drawable.pic1;
             messageList.add(info);
         }
@@ -197,13 +244,14 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                         AudioPlayerHandler.getInstance().stopPlayer();
                     mReVoiceHint.setVisibility(View.VISIBLE);
                     mVolumeDlg.show();
-                    mAudioRecorder = new AudioRecordHandler(getAudioPath(), new SpeexEncoder.TaskCallback() {
+                    mAudioPath = getAudioPath(String.valueOf(System.currentTimeMillis()) + ".spx");
+                    mAudioRecorder = new AudioRecordHandler(mAudioPath, new SpeexEncoder.TaskCallback() {
                         @Override
                         public void callback(Object result) {
                             Logger.info(TAG, "send audio message");
                             if (mIsAlready) {
                                 //此处发送消息 用Handler处理
-
+                                mHandler.obtainMessage(Const.RECORD_MSG_OVER, mAudioRecorder.getRecordTime()).sendToTarget();
                             }
                         }
                     });
@@ -234,7 +282,15 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                     if (mVolumeDlg.isShowing()) {
                         mVolumeDlg.dismiss();
                     }
-                    mIsAlready = true;
+                    if (yDown - yUp <= 50) { //上滑动停止录音
+                        if (mAudioRecorder.getRecordTime() >= 0.5 && mAudioRecorder.getRecordTime() < Const.MAX_SOUND_RECORD_TIME) {
+                            mIsAlready = true;
+                        }
+                    }
+
+                    if (mAudioRecorder.getRecordTime() <= 0.5) {
+                        Toast.makeText(MainActivity.this, "录音时间太短", Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 default:
                     break;
@@ -244,18 +300,6 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         }
     };
 
-    private String getAudioPath() {
-        final File folder = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath()
-                + File.separator
-                + "Bruce"
-                + File.separator
-                + "audio");
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        return folder.getPath();
-    }
 
     /**
      * 输入框的输入监听事件
@@ -407,6 +451,25 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             folder.mkdirs();
         }
 
+        return folder.getAbsolutePath() + File.separator + fileName;
+    }
+
+    /**
+     * 语音保存路径
+     *
+     * @return
+     */
+    private String getAudioPath(String fileName) {
+        final File folder = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath()
+                + File.separator
+                + "Brucetoo"
+                + File.separator
+                + "audio");
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        //+File.separator+fileName+".spx"
         return folder.getAbsolutePath() + File.separator + fileName;
     }
 
@@ -592,7 +655,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             info.msgType = MessageAdapter.MESSAGE_TYPE_SEND_IMAGE;
             info.isSend = true;
             info.imagePath = path;
-            Log.d(TAG,"handPickPhotoData:"+path);
+            Log.d(TAG, "handPickPhotoData:" + path);
             adapter.addMessage(info, mListView);
         }
 
@@ -615,13 +678,61 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         }
         MessageInfo info = new MessageInfo();
         info.isSend = true;
-        info.imagePath = "file://"+takePhotoSavePath;
+        info.imagePath = "file://" + takePhotoSavePath;
         info.msgType = MessageAdapter.MESSAGE_TYPE_SEND_IMAGE;
         info.time = "44:44";
-        adapter.addMessage(info,mListView);
+        adapter.addMessage(info, mListView);
         //压缩处理.
         //上传至服务器
         //加入消息队列.....
+    }
+
+
+    /**
+     * 调整录音显示界面
+     *
+     * @param voiceValue
+     */
+    private void onReceiveMaxVolume(int voiceValue) {
+        Log.i("onReceiveMaxVolume--", voiceValue + "");
+        if (voiceValue < 200.0) {
+            mVolumeImg.setImageResource(R.drawable.sound_volume_01);
+        } else if (voiceValue > 200.0 && voiceValue < 600) {
+            mVolumeImg.setImageResource(R.drawable.sound_volume_02);
+        } else if (voiceValue > 600.0 && voiceValue < 1200) {
+            mVolumeImg.setImageResource(R.drawable.sound_volume_03);
+        } else if (voiceValue > 1200.0 && voiceValue < 2400) {
+            mVolumeImg.setImageResource(R.drawable.sound_volume_04);
+        } else if (voiceValue > 2400.0 && voiceValue < 10000) {
+            mVolumeImg.setImageResource(R.drawable.sound_volume_05);
+        } else if (voiceValue > 10000.0 && voiceValue < 28000.0) {
+            mVolumeImg.setImageResource(R.drawable.sound_volume_06);
+        } else if (voiceValue > 28000.0) {
+            mVolumeImg.setImageResource(R.drawable.sound_volume_07);
+        }
+    }
+
+    /**
+     * 录音结束处理
+     *
+     * @param voiceLen 录音时长
+     */
+    private void onRecordOver(Float voiceLen) {
+        Log.i(TAG, "record over");
+
+        int tLen = (int) (voiceLen + 0.5);
+        tLen = tLen < 1 ? 1 : tLen;
+        if (tLen < voiceLen) {
+            ++tLen;
+        }
+
+        MessageInfo info = new MessageInfo();
+        info.isSend = true;
+        info.msgType = MessageAdapter.MESSAGE_TYPE_SEND_AUDIO;
+        info.audioLen = tLen + "";
+        info.audioPath = mAudioPath;
+        info.time = "44:44";
+        adapter.addMessage(info, mListView);
     }
 }
 

@@ -9,4 +9,7 @@ public class MessageInfo {
     public String contentText;
     public boolean isSend = false;
     public String time;
+    public String audioLen;
+    public String audioPath;
+
 }
