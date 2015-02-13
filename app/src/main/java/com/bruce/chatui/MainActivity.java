@@ -423,7 +423,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                 removeBottomView();
                 Intent intent = new Intent(MainActivity.this, PickPictureActivity.class);
                 startActivityForResult(intent, MSG_PIC_PHOTO);
-                overridePendingTransition(R.anim.album_enter, R.anim.album_exit);
+                overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top);
             }
         });
 

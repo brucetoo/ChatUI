@@ -61,7 +61,8 @@ public class PickPictureActivity extends RoboActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.album_enter,R.anim.album_exit);
+      //  overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
     }
 
     @Override
