@@ -182,7 +182,7 @@ public class RippleView extends RelativeLayout
                 timerEmpty++;
                 final Bitmap tmpBitmap = getCircleBitmap((int) ((radiusMax) * (((float) timerEmpty * FRAME_RATE) / (durationEmpty))));
                 canvas.drawBitmap(tmpBitmap, 0, 0, paint);
-                tmpBitmap.recycle();
+            //    tmpBitmap.recycle(); // 不回收bitmap 因为用户很可能连续发送多条语音
             }
 
             paint.setColor(rippleColor);

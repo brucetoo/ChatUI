@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -241,6 +242,8 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    Vibrator vibrator = (Vibrator) MainActivity.this.getSystemService(VIBRATOR_SERVICE);
+                    vibrator.vibrate(200);
                     yDown = event.getY(); //记录按下时的Y位置
                     //判断是否正在播放音频
                     if (AudioPlayerHandler.getInstance().isPlaying())
@@ -293,6 +296,10 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
                     if (mAudioRecorder.getRecordTime() <= 0.5) {
                         Toast.makeText(MainActivity.this, "录音时间太短", Toast.LENGTH_SHORT).show();
+                        /**
+                         * 待完善
+                         此处可以处理将  mAudioPath 路径下存在的录音文件删掉
+                         */
                     }
                     break;
                 default:
