@@ -68,7 +68,11 @@ public class PickPictureActivity extends RoboActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1){
-            setResult(RESULT_OK,data);
+            if(resultCode == RESULT_OK) {
+                setResult(RESULT_OK, data);
+            }else {
+                setResult(RESULT_CANCELED,null);
+            }
             PickPictureActivity.this.finish();
         }
     }

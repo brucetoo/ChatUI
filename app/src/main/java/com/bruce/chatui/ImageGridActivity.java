@@ -96,7 +96,7 @@ public class ImageGridActivity extends RoboActivity {
             @Override
             public void onClick(View v) {
 
-                setResult(RESULT_OK, null);
+                setResult(RESULT_CANCELED, null);
                 ImageGridActivity.this.finish();
             }
         });
