@@ -21,5 +21,6 @@
 
     <color name="material_500">#9c27b0</color>
     <color name="material_700">#7b1fa2</color>
+    <color name="rippelColor">#FFFFFF</color>
 </resources>
 

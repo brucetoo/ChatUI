@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.bruce.chatui.thirdparty.RippleView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ripple="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="#f2f7fa"
     android:layout_width="match_parent"
     android:gravity="center"
     android:padding="10dp"
-    android:layout_height="100dp">
+    android:id="@+id/ripple"
+    android:layout_height="100dp"
+    ripple:rv_type="doubleRipple"
+    ripple:rv_centered="true"
+    ripple:rv_zoom="true"
+    ripple:rv_color="@color/material_500"
+    >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="松开 结束"
         android:id="@+id/voice_hint"
-        android:visibility="gone"
+        android:visibility="visible"
+        android:layout_above="@+id/voice_view"
         />
 
     <ImageButton
@@ -21,4 +30,4 @@
         android:layout_gravity="center"
         android:background="@drawable/selector_voice_bg"
         android:id="@+id/voice_view" />
-</LinearLayout>
+</com.bruce.chatui.thirdparty.RippleView>

@@ -15,7 +15,26 @@
 -->
 
 <resources>
-    
+
+
+    <declare-styleable name="RippleView">
+        <attr name="rv_alpha" format="integer" />
+        <attr name="rv_framerate" format="integer"/>
+        <attr name="rv_rippleDuration" format="integer"/>
+        <attr name="rv_zoomDuration" format="integer" />
+        <attr name="rv_color" format="color" />
+        <attr name="rv_centered" format="boolean" />
+        <attr name="rv_type" format="enum">
+            <enum name="simpleRipple" value="0"/>
+            <enum name="doubleRipple" value="1"/>
+            <enum name="rectangle" value="2" />
+        </attr>
+        <attr name="rv_ripplePadding" format="dimension" />
+        <attr name="rv_zoom" format="boolean" />
+        <attr name="rv_zoomScale" format="float" />
+
+    </declare-styleable>
+
     <declare-styleable name="PagerControl">
         <attr name="barColor"        format="color" />
         <attr name="highlightColor"  format="color" />
@@ -23,7 +42,7 @@
         <attr name="fadeDuration"    format="integer" />
         <attr name="roundRectRadius" format="dimension" />
     </declare-styleable>
-    
+
 	<declare-styleable name="ViewPagerIndicator">
 	    <!-- Style of the circle indicator. -->
         <attr name="vpiCirclePageIndicatorStyle" format="reference"/>

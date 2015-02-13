@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.bruce.chatui.adapter.MessageAdapter;
 import com.bruce.chatui.adapter.PhraseAdapter;
 import com.bruce.chatui.adapter.SmileyPagerAdapter;
+import com.bruce.chatui.thirdparty.RippleView;
 import com.bruce.chatui.utils.Const;
 import com.bruce.chatui.utils.Logger;
 import com.mogujie.tt.support.audio.AudioPlayerHandler;
@@ -69,6 +70,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     private View mVoice; //录音面板
     private ImageButton mReVoice;
     private TextView mReVoiceHint;
+    private RippleView mRipple;
     private ViewPager mViewPager;
     private ListView mSmileyListView;
     private TextView mDefalutSmiley;
@@ -189,6 +191,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         mVoice = View.inflate(this, R.layout.view_record, null);
         mReVoice = (ImageButton) mVoice.findViewById(R.id.voice_view);
         mReVoiceHint = (TextView) mVoice.findViewById(R.id.voice_hint);
+        mRipple = (RippleView) mVoice.findViewById(R.id.ripple);
         mReVoice.setOnTouchListener(mVoiceTouchListener);
     }
 
@@ -695,6 +698,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
      */
     private void onReceiveMaxVolume(int voiceValue) {
         Log.i("onReceiveMaxVolume--", voiceValue + "");
+        mRipple.animateRipple(mRipple.getWidth()/2,mRipple.getHeight()/2);
         if (voiceValue < 200.0) {
             mVolumeImg.setImageResource(R.drawable.sound_volume_01);
         } else if (voiceValue > 200.0 && voiceValue < 600) {
